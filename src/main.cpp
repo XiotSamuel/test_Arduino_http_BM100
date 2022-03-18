@@ -127,21 +127,22 @@ void bm100mqttSub(void* pvParam){
 }
 
 void callback(char *topic, byte *payload, unsigned int length) {
-    Serial.print("Message arrived in topic: ");
-    Serial.println(topic);
-    Serial.print("Message:");
-    for (int i = 0; i < length; i++) {
-        Serial.print((char) payload[i]);
-    }
-    Serial.println();
-    Serial.println("-----------------------");
 
-    DynamicJsonDocument doc(1024);
-    deserializeJson(doc, payload);
-    JsonObject root = doc.as<JsonObject>();
-    int cmd = int(root["cmd"]);
-    
-    if(cmd){
+  Serial.print("Message arrived in topic: ");
+  Serial.println(topic);
+  Serial.print("Message:");
+  for (int i = 0; i < length; i++) {
+      Serial.print((char) payload[i]);
+  }
+  Serial.println();
+  Serial.println("-----------------------");
+
+  DynamicJsonDocument doc(1024);
+  deserializeJson(doc, payload);
+  JsonObject root = doc.as<JsonObject>();
+  int cmd = int(root["cmd"]);
+  
+  if(cmd){
     Serial.print("cmd: ");
     Serial.println(cmd);
     driver.setHeaderFrom(0x50);
@@ -161,12 +162,13 @@ void callback(char *topic, byte *payload, unsigned int length) {
     } else if (cmd==4){
       if(driver.send(cmd4, sizeof(cmd4)))
       {Serial.println("cmd 4 send ok");}
-    }else if (cmd==5){
+    } else if (cmd==5){
       if(driver.send(cmd5, sizeof(cmd5)))
       {Serial.println("cmd 5 send ok");}
     }
     driver.waitPacketSent();
   }
+  
 }
 
 void loop() {
